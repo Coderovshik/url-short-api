@@ -1,0 +1,9 @@
+.git
+.cache
+
+Makefile
+
+!README*.md
+README-secret.md
+
+/build/package/Dockerfile*

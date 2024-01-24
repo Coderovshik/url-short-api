@@ -1,0 +1,33 @@
+services:
+  db:
+    image: postgres:16.1-alpine
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: foobarbaz
+    networks:
+      - urlshort
+    ports:
+      - 5432:5432
+
+  url-short:
+    image: url-short
+    build:
+      context: .
+      dockerfile: ./build/package/Dockerfile
+    depends_on:
+      - db
+    environment:
+      CONNECTION_STRING: postgres://postgres:foobarbaz@db:5432/postgres?sslmode=disable
+      GOOSE_DBSTRING: postgres://postgres:foobarbaz@db:5432/postgres?sslmode=disable
+      GOOSE_DRIVER: postgres
+    networks:
+      - urlshort
+    ports:
+      - 8080:8080
+
+volumes:
+  pgdata:
+
+networks:
+  urlshort:
